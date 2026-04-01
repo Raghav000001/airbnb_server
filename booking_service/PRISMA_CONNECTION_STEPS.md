@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🏨 Airbnb Booking Service
+# 🏨 PRISMA_CONNECTION_STEPS
 
-**A production-grade backend built with Node.js · TypeScript · Prisma · MySQL**
+**A production-grade backend starter app built with Node.js · TypeScript · Prisma · MySQL**
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
