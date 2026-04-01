@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Booking {
+  id            Int           @id @default(autoincrement())
+  hotelId       Int
+  userId        Int
+  bookingAmount Int
+  bookingStatus BookingStatus  @default(PENDING)
+  totalGuests   Int
+  idempotencyKeyId Int       @unique
+  idempotencyKey IdempotencyKey @relation(fields: [idempotencyKeyId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model IdempotencyKey{
+  id Int @id @default(autoincrement())
+  key String @unique  //this will be a uuid
+  booking  Booking?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
