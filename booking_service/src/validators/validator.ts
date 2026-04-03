@@ -1,7 +1,13 @@
 import {z} from "zod";
 
-export const userValidatorSchema =  z.object({
-     email :z.string().trim().toLowerCase().email("invalid email address"),
-     password:z.string().trim().min(5, "password must be at least 5 characters").max(20, "pass can not be bigger than 20 characters")
+export const createBookingValidatorSchema = z.object({
+     userId:z.number().int().positive("User id must be a positive integer"),
+     hotelId:z.number().int().positive("Hotel id must be a positive integer"),
+     totalGuests:z.number().int().positive("Total guests must be a positive integer"),
+     bookingAmount:z.number().positive("Booking amount must be a positive number")
+})
+
+export const finalizeBookingValidatorSchema = z.object({
+     idemPotencyKey:z.string().trim().min(1, "Idempotency key must be a non-empty string")
 })
 

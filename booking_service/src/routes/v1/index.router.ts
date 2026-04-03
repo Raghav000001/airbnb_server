@@ -1,8 +1,9 @@
 import { Router } from "express";
-import pingRouter from "./ping.routes.ts";
+import bookingRouter from "./booking.router.ts";
+
 
 const v1Router = Router();
 
-v1Router.use("/ping", pingRouter);
+v1Router.use("/booking",bookingRouter)
 
 export default v1Router;

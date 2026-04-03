@@ -3,6 +3,7 @@ import { attachCorelationId } from "./middlewares/corelation.middleware.ts"
 import express from "express"
 import { serverConfig } from "./config/index.ts"
 const app = express()
+app.use(express.json());
 
 
 // add a correlationId to every request 
@@ -11,7 +12,7 @@ app.use(attachCorelationId)
 
 
 // custom routes import
-import v1Router from "./routes/v1/index.routes.ts"
+import v1Router from "./routes/v1/index.router.ts"
 import v2Router from "./routes/v2/index.router.ts"
 
 // routes implementation
