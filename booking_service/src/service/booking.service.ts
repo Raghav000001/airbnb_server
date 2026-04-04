@@ -6,8 +6,9 @@ import {
   createBooking,
   createIdemPotencyKey,
   finalizeIdemPotencyKey,
-  getIdemPotencyKey,
+  getIdemPotencyKeyWithLock,
 } from "../repositories/booking.repository.ts";
+import PrismaClient from "../prisma/client.ts";
 
 export async function createBookingService(bookingInput: CreateBookingDto) {
   const booking = await createBooking(bookingInput);
@@ -20,14 +21,16 @@ export async function createBookingService(bookingInput: CreateBookingDto) {
 }
 
 export async function finalizeBookingService(idemPotencyKey: string) {
-  const idemPotencyKeyData = await getIdemPotencyKey(idemPotencyKey);
-  if (!idemPotencyKeyData) {
-    throw new NotFoundError("Idempotency key not found");
-  }
-  if (idemPotencyKeyData.finalized) {
-    throw new badRequest("Booking already finalized");
-  }
-  const booking = await confirmBooking(idemPotencyKeyData.bookingId);
-  await finalizeIdemPotencyKey(idemPotencyKey);
-  return booking;
+  return await PrismaClient.$transaction(async (txn) => {
+    const idemPotencyKeyData = await getIdemPotencyKeyWithLock(txn,idemPotencyKey);
+    if (!idemPotencyKeyData) {
+      throw new NotFoundError("Idempotency key not found");
+    }
+    if (idemPotencyKeyData.finalized) {
+      throw new badRequest("Booking already finalized");
+    }
+    const booking = await confirmBooking(txn,idemPotencyKeyData.bookingId);
+    await finalizeIdemPotencyKey(txn,idemPotencyKey);
+    return booking;
+  });
 }
