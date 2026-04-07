@@ -14,6 +14,7 @@ app.use(attachCorelationId)
 // custom routes import
 import v1Router from "./routes/v1/index.router.ts"
 import v2Router from "./routes/v2/index.router.ts"
+import { addToQueue } from "./producers/email.pruducers.ts"
 
 // routes implementation
 // api versioning
@@ -29,4 +30,18 @@ app.use(genericErrorHandler)
 
 app.listen(serverConfig.PORT,()=> {
     console.log("app is running on port",serverConfig.PORT);
+    addToQueue({
+        to:"[EMAIL_ADDRESS]",
+        subject:"Booking Confirmation",
+        templateId:"booking_confirmation",
+        params:{
+            userName:"Raghav",
+            bookingId:"123456789",
+            bookingDate:"2022-01-01",
+            bookingAmount:1000,
+            hotelName:"Hotel Name",
+            hotelId:1,
+            totalGuests:2,
+        }
+    })
 })

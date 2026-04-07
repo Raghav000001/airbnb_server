@@ -2,8 +2,19 @@ import {Redis} from "ioredis"
 import { serverConfig } from "./index.ts"
 import Redlock from "redlock";
 
+let connection:Redis
 
-const redisClient = new Redis(serverConfig.REDIS_URL)
+ function getRedisConnection() {
+   return ()=> {
+       if (!connection) {
+          connection = new Redis(serverConfig.REDIS_URL)
+          return connection
+       }
+       return connection
+   } 
+}
+
+const redisClient = getRedisConnection()
 
 const redLock = new Redlock([redisClient],{
     retryCount: 0,
